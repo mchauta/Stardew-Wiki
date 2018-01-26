@@ -12,10 +12,10 @@ export default {
     }
   },
 
-  async fetchSingleCat (catName) {
+  async fetchSinglePage (pageName) {
         try {
 
-          let response = await fetch(apiHost + 'action=query&list=categorymembers&format=json&cmtitle=' + catName);
+          let response = await fetch(apiHost + 'action=parse&format=json&page=' + pageName);
           let responseJson = await response.json();
           return responseJson;
     } catch (error) {

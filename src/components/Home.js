@@ -28,8 +28,7 @@ static navigationOptions = {
   async componentDidMount() {
      const catData = await ajax.fetchCategories ();
      this.setState({ categories: catData });
-     console.log(catData);
-     console.log(this.state.categories);
+
   }
   render() {
     const { navigate } = this.props.navigation;
@@ -42,11 +41,11 @@ static navigationOptions = {
      />
 
         {this.state.categories.query ? (
-         //<CategoryList categories={this.state.categories.query} />
+
          <FlatList
            data={this.state.categories.query.pages[4].links}
            renderItem={({item}) =>
-             <TouchableOpacity onPress={() => navigate("SingleCat")}>
+             <TouchableOpacity onPress={() => navigate("SingleCat", {pageName: item.title})}>
                <Text style={styles.listItem}>{item.title}</Text>
              </TouchableOpacity>
            }
