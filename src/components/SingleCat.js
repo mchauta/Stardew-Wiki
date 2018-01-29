@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, WebView, ScrollView } from "react-native";
+import { StyleSheet, Text, View, WebView, ScrollView, Image } from "react-native";
 import PropTypes from 'prop-types';
 import { StackNavigator } from 'react-navigation';
 import ajax from '../ajax';
@@ -47,6 +47,20 @@ class SingleCat extends React.Component {
                 value={this.state.data.parse.text['*']}
                 stylesheet={webstyles}
                 onLinkPress={(url) => navigate("SingleCat", {pageName: url.replace("/","")})}
+                renderNode = {
+                  function renderNode(node, index, siblings, parent, defaultRenderer) {
+                      if (node.name == 'img') {
+                        const a = node.attribs;
+                        //const imgHtml = `<img src="${a.src}"></img>`;
+                        return (
+                          <Image
+                            style={{width: Number(a.width), height: Number(a.height)}}
+                            source={{uri: 'https://stardewvalleywiki.com/' + a.src}}
+                          />
+                        );
+                      }
+                    }
+                }
 
               />
           </ScrollView>
