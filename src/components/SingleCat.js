@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, WebView, ScrollView, Image } from "react-native";
+import { StyleSheet, Text, View, WebView, ScrollView, Image, TouchableOpacity, FlatList  } from "react-native";
 import PropTypes from 'prop-types';
 import { StackNavigator } from 'react-navigation';
 import ajax from '../ajax';
 import HTMLView from 'react-native-htmlview';
+
 
 
 class SingleCat extends React.Component {
@@ -21,8 +22,8 @@ class SingleCat extends React.Component {
      const { params } = this.props.navigation.state;
      const singlePageData = await ajax.fetchSinglePage (params.pageName);
      this.setState({ data: singlePageData });
-     console.log(this.state.data);
-     console.log(this.state.data.parse.text['*']);
+     //console.log(this.state.data);
+     //console.log(this.state.data.parse.text['*']);
 
   }
 
@@ -44,23 +45,136 @@ class SingleCat extends React.Component {
           <ScrollView>
               <HTMLView
                 style={styles.web}
-                value={this.state.data.parse.text['*']}
+                value={'<body><div>' + this.state.data.parse.text['*'] + '</div></body>'}
                 stylesheet={webstyles}
                 onLinkPress={(url) => navigate("SingleCat", {pageName: url.replace("/","")})}
                 renderNode = {
                   function renderNode(node, index, siblings, parent, defaultRenderer) {
-                      if (node.name == 'img') {
-                        const a = node.attribs;
-                        //const imgHtml = `<img src="${a.src}"></img>`;
+                      var a;
+                      switch (node.name) {
+
+                        case 'img':
+
+                          a = node.attribs;
+                          return (
+                            <Image
+                              key={index}
+                              style={{width: Number(a.width), height: Number(a.height)}}
+                              source={{uri: 'https://stardewvalleywiki.com/' + a.src}}
+                            />
+                          );
+
+                          case 'div':
+                          a = node.attribs;
+
+                          return (
+                            <View
+                              key={index} >
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
+
+                          case 'body':
+                          a = node.attribs;
+
+                          return (
+                            <View
+                              key={index} >
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
+
+                          case 'ul':
+                          a = node.attribs;
+
+                          return (
+                            <View
+                              key={index} >
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
+
+                          case 'li':
+                          a = node.attribs;
+
+                          return (
+                            <View
+                              key={index} >
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
+
+
+                        case 'table' :
+
+                          a = node.attribs;
+                          console.log(a);
+                          return (
+                            <View
+                              key={index} style={styles.tableContainer}>
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
+
+                          case 'p' :
+
+                            a = node.attribs;
+                            console.log(a);
+                            return (
+                              <View
+                                key={index} style={styles.p}>
+                                <Text>{defaultRenderer(node.children, parent)}</Text>
+                              </View>
+                            );
+
+                        case 'tbody' :
+                        a = node.attribs;
+
+                          return (
+                            <View
+                              key={index} style={styles.tableBody}>
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+
+                          );
+
+
+                        case 'tr' :
+                        a = node.attribs;
+
                         return (
-                          <Image
-                            style={{width: Number(a.width), height: Number(a.height)}}
-                            source={{uri: 'https://stardewvalleywiki.com/' + a.src}}
-                          />
+                          <View
+                            key={index} style={styles.tableRow}>
+                            {defaultRenderer(node.children, parent)}
+                          </View>
+
                         );
+
+
+                        case 'td' :
+                        a = node.attribs;
+
+                        return (
+                          <View
+                            key={index} style={styles.tableData}>
+                            {defaultRenderer(node.children, parent)}
+                          </View>
+                        );
+
+
+                        case 'th':
+                        a = node.attribs;
+
+                        return (
+                          <View
+                            key={index} style={styles.tableHeader}>
+                            {defaultRenderer(node.children, parent)}
+                          </View>
+                        );
+
                       }
-                    }
                 }
+              }
 
               />
           </ScrollView>
@@ -77,14 +191,40 @@ class SingleCat extends React.Component {
 
 var webstyles = StyleSheet.create({
 
+
 })
 
 const styles = StyleSheet.create({
-  container: {
+  tableRow : {
+    flexDirection: 'row',
     flex: 1,
-    justifyContent: "center",
-    //alignItems: "center",
-    backgroundColor: "#F5FCFF"
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    flexWrap: 'wrap',
+
+
+
+  },
+  p: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  tableData : {
+    flex: 1,
+    alignSelf: 'stretch',
+
+  },
+  tableHeader : {
+    flex: 1,
+    alignSelf: 'stretch',
+    backgroundColor: 'green',
+  },
+  tableBody: {
+    flex:1
+  },
+  tableContainer: {
+
+    width: '100%',
   },
   welcome: {
     fontSize: 20,
@@ -93,9 +233,9 @@ const styles = StyleSheet.create({
   },
   web: {
     width: '100%',
-    flex: 1,
-    overflow: 'scroll',
-  }
+    padding: 5,
+  },
+
 });
 
 export default SingleCat;

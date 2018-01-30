@@ -11,7 +11,8 @@ import {
   View,
   Button,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native';
 import ajax from '../ajax';
 //import CategoryList from './CategoryList'
@@ -35,10 +36,7 @@ static navigationOptions = {
 
     return (
       <View style={styles.container}>
-      <Button
-         onPress={() => navigate("Options")}
-         title="Options"
-     />
+      
 
         {this.state.categories.query ? (
 
@@ -53,7 +51,13 @@ static navigationOptions = {
            keyExtractor={item => item.title}
          />
        ) : (
+         <View style={styles.welcomeContainer}>
          <Text style={styles.welcome}>Stardew Valley</Text>
+         <Image
+          style={styles.welcomeImg}
+           source={require('../img/Blue_Chicken.png')}
+         />
+         </View>
        )}
 
       </View>
@@ -65,13 +69,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    //alignItems: 'center',
     backgroundColor: '#F5FCFF',
     width: '100%',
 
   },
   welcome: {
-    fontSize: 20,
+    //flex: 1,
+    fontSize: 40,
     textAlign: 'center',
     margin: 10,
   },
@@ -87,4 +91,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
   },
+  welcomeContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#F5FCFF',
+    width: '100%',
+    alignItems: 'center',
+
+  },
+  welcomeImg: {
+
+  }
 });

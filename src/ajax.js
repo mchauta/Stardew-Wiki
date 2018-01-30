@@ -15,11 +15,26 @@ export default {
   async fetchSinglePage (pageName) {
         try {
 
-          let response = await fetch(apiHost + 'action=parse&format=json&page=' + pageName);
+          let response = await fetch(apiHost + 'action=parse&format=json&disabletoc=true&prop=headhtml|wikitext|text&disableeditsection=true&page=' + pageName);
           let responseJson = await response.json();
           return responseJson;
     } catch (error) {
       console.error(error);
     }
+  },
+
+
+async fetchSinglePageFormat (pageName) {
+      try {
+
+        let response = await fetch(apiHost + 'action=parse&format=json&disabletoc=true&disableeditsection=true&page=' + pageName);
+        let responseJson = await response.json();
+        console.log(responseJson);
+        let formatData = '<body>' + responseJson.parse.text['*'] + '</body>';
+        //console.log(formatData);
+        return formatData;
+  } catch (error) {
+    console.error(error);
   }
+}
 };
