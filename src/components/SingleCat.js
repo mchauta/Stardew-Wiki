@@ -29,7 +29,7 @@ class SingleCat extends React.Component {
 
   static navigationOptions = ({ navigation }) => ({
 
-    title: navigation.state.params.pageName,
+    title: navigation.state.params.pageName.replace("_", " "),
   })
 
 
@@ -51,6 +51,9 @@ class SingleCat extends React.Component {
                 renderNode = {
                   function renderNode(node, index, siblings, parent, defaultRenderer) {
                       var a;
+                      var b;
+
+                      console.log(node.name);
                       switch (node.name) {
 
                         case 'img':
@@ -59,17 +62,22 @@ class SingleCat extends React.Component {
                           return (
                             <Image
                               key={index}
-                              style={{width: Number(a.width), height: Number(a.height)}}
+                              style={[styles.image,  {width: Number(a.width), height: Number(a.height)}]}
                               source={{uri: 'https://stardewvalleywiki.com/' + a.src}}
                             />
                           );
 
                           case 'div':
                           a = node.attribs;
-
+                          //console.log(a);
+                          if (a.class) {
+                            b = a.class;
+                          } else {
+                            b = index;
+                          }
                           return (
                             <View
-                              key={index} >
+                              key={b + index} >
                               {defaultRenderer(node.children, parent)}
                             </View>
                           );
@@ -84,12 +92,60 @@ class SingleCat extends React.Component {
                             </View>
                           );
 
-                          case 'ul':
+
+
+                          case 'h4':
                           a = node.attribs;
 
                           return (
                             <View
                               key={index} >
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
+
+                          case 'h3':
+                          a = node.attribs;
+
+                          return (
+                            <View
+                              key={index} >
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
+
+                          case 'h2':
+                          a = node.attribs;
+
+                          return (
+                            <View
+                              key={index} >
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
+
+
+
+
+
+
+
+                          case 'ul':
+                          a = node.attribs;
+
+                          return (
+                            <View
+                              key={index} style={styles.ul}>
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
+
+                          case 'ol':
+                          a = node.attribs;
+
+                          return (
+                            <View
+                              key={index} style={styles.ol}>
                               {defaultRenderer(node.children, parent)}
                             </View>
                           );
@@ -99,16 +155,17 @@ class SingleCat extends React.Component {
 
                           return (
                             <View
-                              key={index} >
+                              key={index} style={styles.li}>
                               {defaultRenderer(node.children, parent)}
                             </View>
                           );
 
 
+
+
                         case 'table' :
 
                           a = node.attribs;
-                          console.log(a);
                           return (
                             <View
                               key={index} style={styles.tableContainer}>
@@ -119,7 +176,7 @@ class SingleCat extends React.Component {
                           case 'p' :
 
                             a = node.attribs;
-                            console.log(a);
+
                             return (
                               <View
                                 key={index} style={styles.p}>
@@ -138,6 +195,25 @@ class SingleCat extends React.Component {
 
                           );
 
+                          case 'thead':
+                          a = node.attribs;
+
+                          return (
+                            <View
+                              key={index} style={styles.tableHeader}>
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
+
+                          case 'tfoot':
+                          a = node.attribs;
+
+                          return (
+                            <View
+                              key={index} style={styles.tableHeader}>
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
 
                         case 'tr' :
                         a = node.attribs;
@@ -172,6 +248,16 @@ class SingleCat extends React.Component {
                           </View>
                         );
 
+                        case 'h1':
+                        a = node.attribs;
+
+                        return (
+                          <Text
+                            key={index} style={styles.h1}>
+                            {defaultRenderer(node.children, parent)}
+                          </Text>
+                        );
+
                       }
                 }
               }
@@ -190,7 +276,9 @@ class SingleCat extends React.Component {
 }
 
 var webstyles = StyleSheet.create({
-
+  h1: {
+    fontSize: 40,
+  }
 
 })
 
@@ -205,6 +293,9 @@ const styles = StyleSheet.create({
 
 
   },
+  image: {
+
+  },
   p: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -212,12 +303,27 @@ const styles = StyleSheet.create({
   tableData : {
     flex: 1,
     alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    padding: 5,
+
+
+  },
+  ul : {
+    flex: 1,
+    alignItems: 'center',
+  },
+  li : {
+    flex: 1,
 
   },
   tableHeader : {
     flex: 1,
-    alignSelf: 'stretch',
+    //alignSelf: 'stretch',
     backgroundColor: 'green',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   tableBody: {
     flex:1
