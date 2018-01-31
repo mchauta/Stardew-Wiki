@@ -15,6 +15,7 @@ import {
   Image
 } from 'react-native';
 import ajax from '../ajax';
+import SearchBar from './SearchBar';
 //import CategoryList from './CategoryList'
 import { StackNavigator } from 'react-navigation';
 
@@ -22,35 +23,62 @@ import { StackNavigator } from 'react-navigation';
 export default class Home extends Component<{}> {
   state = {
     categories: [],
+    searchResults: [],
   };
-static navigationOptions = {
-  title: "Stardew Valley Wiki",
-}
+
+
+  searchWiki = async (searchTerm) => {
+    let searchResults = [];
+    if (searchTerm) {
+     const searchData = await ajax.fetchSearchResults(searchTerm);
+     this.setState({ searchResults: searchData.query.search });
+     console.log(this.state.searchResults);
+   } else {
+     this.setState({searchResults: []});
+   }
+  }
+
+
+
+
+  static navigationOptions = {
+    title: "Stardew Valley Wiki",
+  }
   async componentDidMount() {
      const catData = await ajax.fetchCategories ();
-     this.setState({ categories: catData });
+     console.log(catData, 'catData');
+     this.setState({ categories: catData.query.pages[4].links });
+     console.log(this.state.categories, 'categories');
 
   }
   render() {
     const { navigate } = this.props.navigation;
+    console.log(this.state.searchResults);
+    const dealsToDisplay = this.state.searchResults.length > 0
+     ? this.state.searchResults
+     : this.state.categories;
 
-    return (
+     console.log(dealsToDisplay, 'Data:');
+
+    if (dealsToDisplay) {
+
+      return(
       <View style={styles.container}>
-      
+        <SearchBar searchWiki={this.searchWiki}/>
+        <FlatList
+          data={dealsToDisplay}
+          renderItem={({item}) =>
+            <TouchableOpacity onPress={() => navigate("SingleCat", {pageName: item.title})}>
+              <Text style={styles.listItem}>{item.title}</Text>
+            </TouchableOpacity>
+          }
 
-        {this.state.categories.query ? (
-
-         <FlatList
-           data={this.state.categories.query.pages[4].links}
-           renderItem={({item}) =>
-             <TouchableOpacity onPress={() => navigate("SingleCat", {pageName: item.title})}>
-               <Text style={styles.listItem}>{item.title}</Text>
-             </TouchableOpacity>
-           }
-
-           keyExtractor={item => item.title}
-         />
-       ) : (
+          keyExtractor={item => item.title}
+        />
+       </View>
+     );
+   }
+    return (
          <View style={styles.welcomeContainer}>
          <Text style={styles.welcome}>Stardew Valley</Text>
          <Image
@@ -58,10 +86,7 @@ static navigationOptions = {
            source={require('../img/Blue_Chicken.png')}
          />
          </View>
-       )}
-
-      </View>
-    );
+       );
   }
 }
 
