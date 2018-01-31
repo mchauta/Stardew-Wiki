@@ -52,8 +52,6 @@ class SingleCat extends React.Component {
                   function renderNode(node, index, siblings, parent, defaultRenderer) {
                       var a;
                       var b;
-
-                      console.log(node.name);
                       switch (node.name) {
 
                         case 'img':
@@ -61,7 +59,7 @@ class SingleCat extends React.Component {
                           a = node.attribs;
                           return (
                             <Image
-                              key={index}
+                              key={'image' - index}
                               style={[styles.image,  {width: Number(a.width), height: Number(a.height)}]}
                               source={{uri: 'https://stardewvalleywiki.com/' + a.src}}
                             />
@@ -77,72 +75,37 @@ class SingleCat extends React.Component {
                           }
                           return (
                             <View
-                              key={b + index} >
+                              key={'div-' + b + index} >
                               {defaultRenderer(node.children, parent)}
                             </View>
                           );
 
                           case 'body':
-                          a = node.attribs;
-
                           return (
                             <View
-                              key={index} >
+                              key={'body' + index}>
                               {defaultRenderer(node.children, parent)}
                             </View>
                           );
-
-
-
-                          case 'h4':
-                          a = node.attribs;
-
-                          return (
-                            <View
-                              key={index} >
-                              {defaultRenderer(node.children, parent)}
-                            </View>
-                          );
-
-                          case 'h3':
-                          a = node.attribs;
-
-                          return (
-                            <View
-                              key={index} >
-                              {defaultRenderer(node.children, parent)}
-                            </View>
-                          );
-
-                          case 'h2':
-                          a = node.attribs;
-
-                          return (
-                            <View
-                              key={index} >
-                              {defaultRenderer(node.children, parent)}
-                            </View>
-                          );
-
-
-
-
 
 
 
                           case 'ul':
-                          a = node.attribs;
-
                           return (
                             <View
-                              key={index} style={styles.ul}>
+                              key={index} style={styles.test}>
                               {defaultRenderer(node.children, parent)}
                             </View>
                           );
 
-                          case 'ol':
-                          a = node.attribs;
-
+                        case 'em':
+                            return (
+                              <View
+                                key={index}>
+                                {defaultRenderer(node.children, parent)}
+                              </View>
+                            );
+                        case 'ol':
                           return (
                             <View
                               key={index} style={styles.ol}>
@@ -150,113 +113,72 @@ class SingleCat extends React.Component {
                             </View>
                           );
 
-                          case 'li':
-                          a = node.attribs;
-
+                        case 'li':
                           return (
                             <View
-                              key={index} style={styles.li}>
+                              key={'li-' + index} style={styles.li}>
                               {defaultRenderer(node.children, parent)}
                             </View>
                           );
-
-
 
 
                         case 'table' :
-
-                          a = node.attribs;
                           return (
                             <View
-                              key={index} style={styles.tableContainer}>
+                              key={'table-' +  index} style={styles.tableContainer}>
                               {defaultRenderer(node.children, parent)}
                             </View>
                           );
 
-                          case 'p' :
 
-                            a = node.attribs;
-
-                            return (
-                              <View
-                                key={index} style={styles.p}>
-                                <Text>{defaultRenderer(node.children, parent)}</Text>
-                              </View>
-                            );
 
                         case 'tbody' :
-                        a = node.attribs;
-
                           return (
                             <View
-                              key={index} style={styles.tableBody}>
+                              key={'tbody-' + index} style={styles.tableBody}>
                               {defaultRenderer(node.children, parent)}
                             </View>
 
                           );
 
                           case 'thead':
-                          a = node.attribs;
-
                           return (
                             <View
-                              key={index} style={styles.tableHeader}>
+                              key={'thead-' + index} style={styles.tableHeader}>
                               {defaultRenderer(node.children, parent)}
                             </View>
                           );
 
-                          case 'tfoot':
-                          a = node.attribs;
 
-                          return (
-                            <View
-                              key={index} style={styles.tableHeader}>
-                              {defaultRenderer(node.children, parent)}
-                            </View>
-                          );
 
                         case 'tr' :
-                        a = node.attribs;
+                          return (
+                            <View
+                              key={'tr-' + index} style={styles.tableRow}>
+                              {defaultRenderer(node.children, parent)}
+                            </View>
 
-                        return (
-                          <View
-                            key={index} style={styles.tableRow}>
-                            {defaultRenderer(node.children, parent)}
-                          </View>
-
-                        );
+                          );
 
 
                         case 'td' :
-                        a = node.attribs;
-
-                        return (
-                          <View
-                            key={index} style={styles.tableData}>
-                            {defaultRenderer(node.children, parent)}
-                          </View>
-                        );
+                          return (
+                            <View
+                              key={'td-' + index} style={styles.tableData}>
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
 
 
                         case 'th':
-                        a = node.attribs;
+                          return (
+                            <View
+                              key={'th-' + index} style={styles.tableHeader}>
+                              {defaultRenderer(node.children, parent)}
+                            </View>
+                          );
 
-                        return (
-                          <View
-                            key={index} style={styles.tableHeader}>
-                            {defaultRenderer(node.children, parent)}
-                          </View>
-                        );
 
-                        case 'h1':
-                        a = node.attribs;
-
-                        return (
-                          <Text
-                            key={index} style={styles.h1}>
-                            {defaultRenderer(node.children, parent)}
-                          </Text>
-                        );
 
                       }
                 }
@@ -310,17 +232,13 @@ const styles = StyleSheet.create({
 
 
   },
-  ul : {
-    flex: 1,
-    alignItems: 'center',
-  },
-  li : {
-    flex: 1,
-
+  test: {
+    width: 150,
+    height: 150,
   },
   tableHeader : {
     flex: 1,
-    //alignSelf: 'stretch',
+    alignSelf: 'stretch',
     backgroundColor: 'green',
     alignItems: 'center',
     justifyContent: 'center',
@@ -329,7 +247,6 @@ const styles = StyleSheet.create({
     flex:1
   },
   tableContainer: {
-
     width: '100%',
   },
   welcome: {
@@ -341,7 +258,14 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 5,
   },
+  ul : {
+      flex: 1,
+      alignItems: 'center',
+    },
+    li : {
+      flex: 1,
 
+    },
 });
 
 export default SingleCat;
