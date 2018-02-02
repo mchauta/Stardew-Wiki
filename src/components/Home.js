@@ -16,7 +16,6 @@ import {
 } from 'react-native';
 import ajax from '../ajax';
 import SearchBar from './SearchBar';
-//import CategoryList from './CategoryList'
 import { StackNavigator } from 'react-navigation';
 
 
