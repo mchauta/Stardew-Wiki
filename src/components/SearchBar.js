@@ -15,6 +15,7 @@ export default class SearchBar extends Component<{}> {
   }
 
 debouncedSearchWiki = debounce(this.props.searchWiki, 300);
+
 handleChange = (searchTerm) => {
   this.setState({searchTerm}, () => {
     this.debouncedSearchWiki(this.state.searchTerm);
@@ -34,11 +35,14 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     margin: 5,
-    backgroundColor: 'white',
+    backgroundColor: '#F5FCFF',
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'white',
     padding: 5,
+    width: '100%',
+    margin: 15,
+    textAlign: 'center',
 
   }
 })

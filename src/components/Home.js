@@ -53,77 +53,110 @@ export default class Home extends Component<{}> {
   render() {
     const { navigate } = this.props.navigation;
     console.log(this.state.searchResults);
-    const dealsToDisplay = this.state.searchResults.length > 0
+    const resultsToDisplay = this.state.searchResults.length > 0
      ? this.state.searchResults
      : this.state.categories;
 
-     console.log(dealsToDisplay, 'Data:');
-
-    if (dealsToDisplay) {
+    if (resultsToDisplay) {
 
       return(
       <View style={styles.container}>
-        <SearchBar searchWiki={this.searchWiki}/>
-        <FlatList
-          data={dealsToDisplay}
-          renderItem={({item}) =>
-            <TouchableOpacity onPress={() => navigate("SingleCat", {pageName: item.title})}>
-              <Text style={styles.listItem}>{item.title}</Text>
-            </TouchableOpacity>
-          }
+        <View style={styles.head}>
+          <Image
+           style={styles.welcomeImg}
+            source={require('../img/Cat.gif')}
+          />
+          <SearchBar searchWiki={this.searchWiki}/>
+        </View>
+        <View style={styles.listContainer}>
+          <FlatList
+            data={resultsToDisplay}
+            renderItem={({item}) =>
+              <TouchableOpacity onPress={() => navigate("SingleCat", {pageName: item.title})}>
+                <Text style={styles.listItem}>{item.title}</Text>
+              </TouchableOpacity>
+            }
 
-          keyExtractor={item => item.title}
-        />
+            keyExtractor={item => item.title}
+          />
+        </View>
        </View>
      );
    }
     return (
          <View style={styles.welcomeContainer}>
-         <Text style={styles.welcome}>Stardew Valley</Text>
-         <Image
-          style={styles.welcomeImg}
-           source={require('../img/Blue_Chicken.png')}
-         />
+           <View style={styles.welcome}>
+             <Text style={{fontSize: 30}}>Stardew Valley Wiki</Text>
+          </View>
+          <View style={styles.welcomeImg}>
+               <Image
+                 source={require('../img/Abigail.gif')}
+               />
+             </View>
          </View>
        );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  listContainer: {
+    flex: 3,
+    width: '100%',
+    paddingLeft: 15,
+    paddingRight: 15,
+    backgroundColor: '#F5FCFF',
+  },
+  head: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#F5FCFF',
+    alignItems: 'center',
     width: '100%',
+    padding: 15,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 2,
+      height: -3
+    },
+    shadowRadius: 5,
+    shadowOpacity: .5
+
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    backgroundColor: 'white',
+    //alignItems: 'center',
+    //width: '100%',
 
   },
   welcome: {
-    //flex: 1,
-    fontSize: 40,
-    textAlign: 'center',
-    margin: 10,
+    flex: 1,
+    justifyContent: 'center',
+
   },
   listItem: {
+    flex: 1,
     textAlign: 'center',
     margin: 5,
-    backgroundColor: '#29ABE2',
+    backgroundColor: '#5771B7',
     padding: 5,
     borderRadius: 5,
     borderWidth: 1,
     overflow: 'hidden',
-    borderColor: '#29ABE2',
+    borderColor: '#23356C',
     fontSize: 18,
     color: 'white',
   },
   welcomeContainer: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#F5FCFF',
-    width: '100%',
+    backgroundColor: 'white',
+    //width: '100%',
     alignItems: 'center',
 
   },
   welcomeImg: {
-
+    justifyContent: 'flex-start',
+    flex: 1,
   }
 });

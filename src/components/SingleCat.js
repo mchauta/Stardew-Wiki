@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, WebView, ScrollView, Image, TouchableOpacity, F
 import PropTypes from 'prop-types';
 import { StackNavigator } from 'react-navigation';
 import ajax from '../ajax';
-//import HTMLView from 'react-native-htmlview';
 import HTML from 'react-native-render-html';
 
 
@@ -85,11 +84,14 @@ class SingleCat extends React.Component {
                     th : {
                       flex: 1,
                       alignSelf: 'stretch',
-                      backgroundColor: '#29ABE2',
+                      backgroundColor: '#23356C',
                       alignItems: 'center',
                       justifyContent: 'center',
                       borderRightWidth: 1,
                       borderColor: 'grey',
+                      color: 'white',
+                      padding: 10,
+                      fontSize: 12,
                     },
 
                     td : {
@@ -97,12 +99,15 @@ class SingleCat extends React.Component {
                       alignSelf: 'stretch',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      flexDirection: 'row',
+                      flexWrap:'wrap',
                       overflow: 'hidden',
                       padding: 10,
                       backgroundColor: '#F5FCFF',
                       borderWidth: 1,
                       borderColor: 'grey',
                       minWidth: 20,
+                      fontSize: 12,
 
                     },
 
@@ -138,7 +143,7 @@ class SingleCat extends React.Component {
 
 const styles = StyleSheet.create({
   loadImg: {
-    
+
   },
   container: {
     backgroundColor: 'white',
