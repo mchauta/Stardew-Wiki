@@ -25,7 +25,7 @@ handleChange = (searchTerm) => {
     return(
       <TextInput
         style= {styles.input}
-        placeholder= "Search Stardew Wiki"
+        placeholder= "Search Stardew Valley Wiki"
         onChangeText={this.handleChange}/>
     );
   }

@@ -41,7 +41,7 @@ export default class Home extends Component<{}> {
 
 
   static navigationOptions = {
-    title: "Stardew Valley Wiki",
+    title: "Stardew Valley Mobile Wiki",
   }
   async componentDidMount() {
      const catData = await ajax.fetchCategories ();

@@ -71,7 +71,7 @@ class SingleCat extends React.Component {
                     'input', 'label', 'legend', 'meter', 'optgroup', 'option', 'output', 'progress', 'select', 'textarea', 'details', 'diaglog',
                     'menu', 'menuitem', 'summary']}
                 alterNode = {alterNode}
-                imagesMaxWidth={Dimensions.get('window').width - 50}
+                //imagesMaxWidth={Dimensions.get('window').width - 50}
                 tagsStyles={{
                     tr: {
                       flexDirection: 'row',
@@ -92,6 +92,7 @@ class SingleCat extends React.Component {
                       color: 'white',
                       padding: 10,
                       fontSize: 12,
+                      fontWeight: 'bold',
                     },
 
                     td : {
@@ -115,8 +116,14 @@ class SingleCat extends React.Component {
                       borderWidth: 1,
                       borderColor: 'grey',
                       borderRadius: 5,
-                    }
+                    },
 
+                    img: {
+                      flex: 1,
+                      maxWidth: '100%',
+
+
+                    },
                   }}
 
 
