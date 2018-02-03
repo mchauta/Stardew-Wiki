@@ -27,12 +27,28 @@ export default class Home extends Component<{}> {
 
 
   searchWiki = async (searchTerm) => {
+
+    let removeFromObject = (object) => {
+      console.log(object, 'the object');
+      object.forEach(function(item, index) {
+        console.log('in loop');
+        if (item.wordcount < 5) {
+            console.log(item, 'remove me');
+            console.log(index);
+            object.splice(index,1);
+        }
+      });
+          return object;
+      }
+
     let searchResults = [];
     if (searchTerm) {
      const searchData = await ajax.fetchSearchResults(searchTerm);
+     const searchDataParsed = removeFromObject(searchData.query.search);
      this.setState({ searchResults: searchData.query.search });
+
      console.log(this.state.searchResults);
-   } else {
+    } else {
      this.setState({searchResults: []});
    }
   }

@@ -18,14 +18,18 @@ class SingleCat extends React.Component {
   state = {
     data: [],
   };
+
+
   async componentDidMount() {
      const { params } = this.props.navigation.state;
-     const singlePageData = await ajax.fetchSinglePage (params.pageName);
+     let singlePageData = await ajax.fetchSinglePage (params.pageName);
      this.setState({ data: singlePageData });
      //console.log(this.state.data);
      //console.log(this.state.data.parse.text['*']);
 
   }
+
+
 
   static navigationOptions = ({ navigation }) => ({
 

@@ -26,7 +26,7 @@ export default {
   async fetchSearchResults(searchTerm) {
         try {
 
-          let response = await fetch(apiHost + 'action=query&list=search&srwhat=title&format=json&srsearch=' + searchTerm);
+          let response = await fetch(apiHost + 'action=query&list=search&srwhat=title&srprop=redirecttitle|wordcount&format=json&srsearch=' + searchTerm);
           let responseJson = await response.json();
           return responseJson;
     } catch (error) {
