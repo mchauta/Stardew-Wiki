@@ -26,8 +26,6 @@ class SingleCat extends React.Component {
      let singlePageData = await ajax.fetchSinglePage (params.pageName);
      this.setState({ data: singlePageData });
      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-     //console.log(this.state.data);
-     //console.log(this.state.data.parse.text['*']);
 
   }
 
@@ -41,8 +39,6 @@ class SingleCat extends React.Component {
 
   sortCoords = (a, b) => {
     if (a[1] && b[1]) {
-      console.log(a[1],b[1]);
-      console.log('coords got inside');
       if (a[1] < b[1]) return -1;
       if (a[1] > b[1]) return 1;
       return 0;
@@ -56,7 +52,6 @@ class SingleCat extends React.Component {
         arrayvar.push([e.nativeEvent.layout.x,  e.nativeEvent.layout.y])
 
         this.setState({ coords: arrayvar }, () => {
-              console.log(this.state.coords, 'coords before');
               var r = [];
               var keys = this.state.tocData;
               var values = this.state.coords;
@@ -67,8 +62,7 @@ class SingleCat extends React.Component {
                 }
 
 
-            console.log(this.state.coords, 'coords sorted');
-              this.setState({toc: r}, () => {console.log(this.state.toc, "TOC");});
+              this.setState({toc: r});
           });
     }
 
@@ -118,7 +112,8 @@ class SingleCat extends React.Component {
          return (
            <View style={styles.head}>
                <FlatList
-               style={this.toggleHeight()}
+                ref="_toc"
+                style={this.toggleHeight()}
                 data={this.state.toc}
                 keyExtractor={(item, index) => index}
                 renderItem={({item, index}) =>
