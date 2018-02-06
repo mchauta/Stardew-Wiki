@@ -60,7 +60,7 @@ class SingleCat extends React.Component {
 
                   r[i] = [keys[i], values[i]];
                 }
-
+              r.unshift(["Back to the top", [0, 0]]);
 
               this.setState({toc: r});
           });
@@ -103,6 +103,20 @@ class SingleCat extends React.Component {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
         }
 
+//toggle the Table of Contents
+        renderTOCList = (item, index) => {
+          if (index === 0) {
+            return (
+              <Text style={styles.listItemTop}>{item[0]}</Text>
+            );
+          }
+            return (
+              <Text style={styles.listItem}>{index}. {item[0]}</Text>
+            );
+          }
+
+
+
 
 //render the Table of Contents
     renderTOC = () => {
@@ -118,7 +132,7 @@ class SingleCat extends React.Component {
                 keyExtractor={(item, index) => index}
                 renderItem={({item, index}) =>
                 <TouchableOpacity onPress={() => this.refs._scrollView.scrollTo({x: item[1][0], y: item[1][1]})}>
-                  <Text style={styles.listItem}>{index + 1}. {item[0]}</Text>
+                  { this.renderTOCList(item, index) }
                 </TouchableOpacity>
                 }
                 />
@@ -332,6 +346,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 5,
     backgroundColor: '#0076FF',
+    padding: 5,
+    overflow: 'hidden',
+    fontSize: 18,
+    color: 'white',
+  },
+  listItemTop: {
+    flex: 1,
+    textAlign: 'center',
+    margin: 5,
+    backgroundColor: '#44DB5E',
     padding: 5,
     overflow: 'hidden',
     fontSize: 18,
