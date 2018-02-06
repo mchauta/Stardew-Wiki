@@ -12,7 +12,8 @@ import {
   Button,
   FlatList,
   TouchableOpacity,
-  Image
+  Image,
+  LayoutAnimation
 } from 'react-native';
 import ajax from '../ajax';
 import SearchBar from './SearchBar';
@@ -46,7 +47,7 @@ export default class Home extends Component<{}> {
      const searchData = await ajax.fetchSearchResults(searchTerm);
      const searchDataParsed = removeFromObject(searchData.query.search);
      this.setState({ searchResults: searchData.query.search });
-
+     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
      console.log(this.state.searchResults);
     } else {
      this.setState({searchResults: []});
@@ -63,6 +64,7 @@ export default class Home extends Component<{}> {
      const catData = await ajax.fetchCategories ();
      console.log(catData, 'catData');
      this.setState({ categories: catData.query.pages[4].links });
+     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
      console.log(this.state.categories, 'categories');
 
   }
@@ -154,12 +156,9 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     margin: 5,
-    backgroundColor: '#5771B7',
+    backgroundColor: '#0076FF',
     padding: 5,
-    borderRadius: 5,
-    borderWidth: 1,
     overflow: 'hidden',
-    borderColor: '#23356C',
     fontSize: 18,
     color: 'white',
   },

@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, WebView, ScrollView, Image, TouchableOpacity, Dimensions, FlatList  } from "react-native";
+import { StyleSheet, Text, View, WebView, ScrollView, Image, TouchableOpacity, Dimensions, FlatList, LayoutAnimation } from "react-native";
 import PropTypes from 'prop-types';
 import { StackNavigator } from 'react-navigation';
 import ajax from '../ajax';
 import HTML from 'react-native-render-html';
 import { Icon } from 'react-native-elements';
+
 
 
 
@@ -24,6 +25,7 @@ class SingleCat extends React.Component {
      const { params } = this.props.navigation.state;
      let singlePageData = await ajax.fetchSinglePage (params.pageName);
      this.setState({ data: singlePageData });
+     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
      //console.log(this.state.data);
      //console.log(this.state.data.parse.text['*']);
 
@@ -78,22 +80,45 @@ class SingleCat extends React.Component {
       }, 5);
     }
 
+    //toggle the arrow for Table of Contents
+            toggleArrow = () => {
+              if (this.state.showTOC) {
+                return(
+                  <Icon
+                   name='keyboard-arrow-up'
+                   color='white' />
+                );
+              }
+              return(
+                <Icon
+                 name='keyboard-arrow-down'
+                 color='white' />);
+            }
+
+    //toggle the height of the Table of Contents
+            toggleHeight = () => {
+              if (this.state.showTOC) {
+                return({height: '30%',});
+              }
+              return({height: 0,});
+            }
 
 //toggle the Table of Contents
         toggleTOC = () => {
           this.setState({showTOC: !this.state.showTOC});
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
         }
 
 
 //render the Table of Contents
     renderTOC = () => {
 
-       if (this.state.toc.length > 0 && this.state.showTOC) {
+       if (this.state.toc.length > 0) {
          console.log(this.state.toc, "inside TOC");
          return (
            <View style={styles.head}>
                <FlatList
-               style={styles.toc}
+               style={this.toggleHeight()}
                 data={this.state.toc}
                 keyExtractor={(item, index) => index}
                 renderItem={({item, index}) =>
@@ -106,23 +131,20 @@ class SingleCat extends React.Component {
                 <TouchableOpacity
                 style={styles.tocContainer}
                  onPress={this.toggleTOC}>
-                   <Text> Table of Contents </Text>
-                   <Icon
-                    name='keyboard-arrow-up' />
+                   <Text style={styles.tocButton}> Table of Contents </Text>
+                   { this.toggleArrow() }
                  </TouchableOpacity>
              </View>
 
          );
        }
        return (
-         <TouchableOpacity
-          onPress={this.toggleTOC}
+         <View
           style={styles.tocContainer}>
 
-          <Text>Table of Contents</Text>
-          <Icon
-           name='keyboard-arrow-up' />
-        </TouchableOpacity>
+          <Text style={styles.tocButton}>Table of Contents Loading...</Text>
+
+        </View>
        );
 
      }
@@ -182,7 +204,7 @@ class SingleCat extends React.Component {
                                         this.onLayout
                                       }
                             key={passProps.key}
-                            style={[styles, { fontWeight: 'bold',}]}>{ children } </Text>
+                            style={[styles, { marginTop: 20, fontWeight: 'bold',}]}>{ children } </Text>
                           );}
                 }}
                 tagsStyles={{
@@ -202,15 +224,13 @@ class SingleCat extends React.Component {
                     th : {
                       flex: 1,
                       alignSelf: 'stretch',
-                      backgroundColor: '#23356C',
+                      backgroundColor: '#44DB5E',
                       alignItems: 'center',
                       justifyContent: 'center',
                       borderRightWidth: 1,
-                      borderColor: 'grey',
-                      color: 'white',
+                      borderColor: 'white',
                       padding: 10,
-                      //fontSize: 12,
-                      //fontWeight: 'bold',
+
                     },
 
                     td : {
@@ -224,16 +244,15 @@ class SingleCat extends React.Component {
                       padding: 10,
                       backgroundColor: '#F5FCFF',
                       borderWidth: 1,
-                      borderColor: 'grey',
+                      borderColor: 'white',
                       minWidth: 20,
                       //fontSize: 12,
 
                     },
 
                     table: {
-                      borderWidth: 1,
-                      borderColor: 'grey',
-                      borderRadius: 5,
+
+
                     },
 
                     img: {
@@ -268,26 +287,31 @@ class SingleCat extends React.Component {
 
 const styles = StyleSheet.create({
   head: {
-    flex: 1,
+    //flex: 1,
     width: '100%',
   },
   toc: {
     padding: 10,
+    height: 0,
+    width: '100%'
   },
   tocArrow: {
     fontSize: 40,
   },
+  tocButton: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
   tocContainer: {
-    //flex:1,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
     padding: 10,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderBottomColor: 'grey',
-    borderTopColor: 'grey',
     width: '100%',
+    backgroundColor: '#0076FF',
+
+
   },
   container: {
     backgroundColor: 'white',
@@ -312,12 +336,9 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     margin: 5,
-    backgroundColor: '#5771B7',
+    backgroundColor: '#0076FF',
     padding: 5,
-    borderRadius: 5,
-    borderWidth: 1,
     overflow: 'hidden',
-    borderColor: '#23356C',
     fontSize: 18,
     color: 'white',
   },
