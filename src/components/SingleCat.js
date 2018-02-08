@@ -60,6 +60,7 @@ class SingleCat extends React.Component {
 
                   r[i] = [keys[i], values[i]];
                 }
+              //place a back to top button at beginning of array
               r.unshift(["Back to the top", [0, 0]]);
 
               this.setState({toc: r});
@@ -122,7 +123,7 @@ class SingleCat extends React.Component {
     renderTOC = () => {
 
        if (this.state.toc.length > 0) {
-         console.log(this.state.toc, "inside TOC");
+
          return (
            <View style={styles.head}>
                <FlatList
@@ -205,6 +206,7 @@ class SingleCat extends React.Component {
                     'menu', 'menuitem', 'summary']}
                 alterNode = {alterNode}
                 renderers={{
+
                       h2: (htmlAttribs, children, styles, passProps) => {
                         this.buildTOCData(passProps.rawChildren[0].children[0].data);
                         return(
@@ -214,7 +216,35 @@ class SingleCat extends React.Component {
                                       }
                             key={passProps.key}
                             style={[styles, { marginTop: 20, fontWeight: 'bold',}]}>{ children } </Text>
-                          );}
+                          );
+                        },
+
+                          table: (htmlAttribs, children, styles, passProps) => {
+                            //if has id render as view instead of scrollview
+                            if (htmlAttribs && htmlAttribs.id =='infoboxtable') {
+                              return (
+                                <View
+                                  style={styles}
+                                  key={passProps.key}>
+                                  { children }
+                                </View>
+                              );
+                              }
+
+                            return (
+                              <ScrollView
+                                horizontal={true}
+                                directionalLockEnabled={false}
+                                key={passProps.key}
+                                >
+                                <View
+                                  style={styles}>
+                                    { children }
+                                </View>
+                                </ScrollView>
+
+                            );
+                          }
                 }}
                 tagsStyles={{
 
@@ -226,8 +256,9 @@ class SingleCat extends React.Component {
                       flexDirection: 'row',
                       flex: 1,
                       alignItems: 'center',
-                      justifyContent: 'space-around',
+                      //justifyContent: 'space-between',
                       flexWrap: 'wrap',
+                      minWidth: Dimensions.get('window').width - 20,
                     },
 
                     th : {
@@ -239,10 +270,17 @@ class SingleCat extends React.Component {
                       borderRightWidth: 1,
                       borderColor: 'white',
                       padding: 10,
+                      //minWidth: 200,
+                      maxWidth: Dimensions.get('window').width,
+
 
                     },
-
+                    li: {
+                      minWidth:75,
+                      minHeight: 16,
+                    },
                     td : {
+                      //minWidth: 200,
                       flex: 1,
                       alignSelf: 'stretch',
                       alignItems: 'center',
@@ -254,8 +292,8 @@ class SingleCat extends React.Component {
                       backgroundColor: '#F5FCFF',
                       borderWidth: 1,
                       borderColor: 'white',
-                      minWidth: 20,
-                      //fontSize: 12,
+                      maxWidth: Dimensions.get('window').width,
+
 
                     },
 

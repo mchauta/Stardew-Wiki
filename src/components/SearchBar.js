@@ -33,7 +33,7 @@ handleChange = (searchTerm) => {
 
 const styles = StyleSheet.create({
   input: {
-    height: 40,
+    height: 50,
     margin: 5,
     backgroundColor: '#F5FCFF',
     borderRadius: 5,
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     width: '100%',
     margin: 15,
     textAlign: 'center',
+    fontSize: 18,
 
   }
 })

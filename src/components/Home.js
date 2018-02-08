@@ -26,29 +26,29 @@ export default class Home extends Component<{}> {
     searchResults: [],
   };
 
+ removeFromObject = (object) => {
+    i = object.length;
+    
+    while (i--) {
+    if (object[i].wordcount < 10) {
+      //if wordcount is less than ten remove from the search results
+        object.splice(i, 1);
+      }
+    }
+        return object;
+
+  }
 
   searchWiki = async (searchTerm) => {
 
-    let removeFromObject = (object) => {
-      console.log(object, 'the object');
-      object.forEach(function(item, index) {
-        console.log('in loop');
-        if (item.wordcount < 5) {
-            console.log(item, 'remove me');
-            console.log(index);
-            object.splice(index,1);
-        }
-      });
-          return object;
-      }
+
 
     let searchResults = [];
     if (searchTerm) {
      const searchData = await ajax.fetchSearchResults(searchTerm);
-     const searchDataParsed = removeFromObject(searchData.query.search);
-     this.setState({ searchResults: searchData.query.search });
+     const searchDataParsed =  this.removeFromObject(searchData.query.search);
+     this.setState({ searchResults: searchDataParsed });
      LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-     console.log(this.state.searchResults);
     } else {
      this.setState({searchResults: []});
    }
@@ -62,15 +62,13 @@ export default class Home extends Component<{}> {
   }
   async componentDidMount() {
      const catData = await ajax.fetchCategories ();
-     console.log(catData, 'catData');
      this.setState({ categories: catData.query.pages[4].links });
      LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-     console.log(this.state.categories, 'categories');
+
 
   }
   render() {
     const { navigate } = this.props.navigation;
-    console.log(this.state.searchResults);
     const resultsToDisplay = this.state.searchResults.length > 0
      ? this.state.searchResults
      : this.state.categories;
@@ -88,6 +86,7 @@ export default class Home extends Component<{}> {
         </View>
         <View style={styles.listContainer}>
           <FlatList
+
             data={resultsToDisplay}
             renderItem={({item}) =>
               <TouchableOpacity onPress={() => navigate("SingleCat", {pageName: item.title})}>
