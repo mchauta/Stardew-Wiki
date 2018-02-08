@@ -86,18 +86,18 @@ export default class Home extends Component<{}> {
   async retryConnection() {
     this.setState({ timeout: false });
      const catData = await ajax.fetchCategories ();
-     console.log(catData, 'catData');
+     //console.log(catData, 'catData');
      this.setState({ categories: catData.query.pages[4].links });
      LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-     console.log(this.state.categories, 'categories');
+     //console.log(this.state.categories, 'categories');
 
   }
 
   async componentDidMount() {
      const catData = await ajax.fetchCategories ();
-     console.log(catData, 'catData');
+     //console.log(catData, 'catData');
      this.setState({ categories: catData.query.pages[4].links });
-     console.log(this.state.categories, 'categories');
+    // console.log(this.state.categories, 'categories');
 
   }
   render() {
