@@ -24,11 +24,12 @@ export default class Home extends Component<{}> {
   state = {
     categories: [],
     searchResults: [],
+    timeout: false,
   };
 
  removeFromObject = (object) => {
     i = object.length;
-    
+    console.log(i, 'object length');
     while (i--) {
     if (object[i].wordcount < 10) {
       //if wordcount is less than ten remove from the search results
@@ -37,6 +38,27 @@ export default class Home extends Component<{}> {
     }
         return object;
 
+  }
+
+
+  renderRetry = () => {
+    if (this.state.timeout == true) {
+      return (
+        <View>
+        <Text style={{textAlign: 'center', padding: 10}}>Connection Failed</Text>
+        <Button
+          onPress={ () => {this.retryConnection()} }
+          title="Retry">
+        </Button>
+        </View>
+      )
+    }
+  }
+
+  checkConnection = () => {
+    setTimeout(()=> {
+      this.setState({ timeout: true });
+    }, 5000);
   }
 
   searchWiki = async (searchTerm) => {
@@ -49,6 +71,7 @@ export default class Home extends Component<{}> {
      const searchDataParsed =  this.removeFromObject(searchData.query.search);
      this.setState({ searchResults: searchDataParsed });
      LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+     console.log(this.state.searchResults);
     } else {
      this.setState({searchResults: []});
    }
@@ -60,11 +83,21 @@ export default class Home extends Component<{}> {
   static navigationOptions = {
     title: "Stardew Valley Mobile Wiki",
   }
-  async componentDidMount() {
+  async retryConnection() {
+    this.setState({ timeout: false });
      const catData = await ajax.fetchCategories ();
+     console.log(catData, 'catData');
      this.setState({ categories: catData.query.pages[4].links });
      LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+     console.log(this.state.categories, 'categories');
 
+  }
+
+  async componentDidMount() {
+     const catData = await ajax.fetchCategories ();
+     console.log(catData, 'catData');
+     this.setState({ categories: catData.query.pages[4].links });
+     console.log(this.state.categories, 'categories');
 
   }
   render() {
@@ -73,7 +106,7 @@ export default class Home extends Component<{}> {
      ? this.state.searchResults
      : this.state.categories;
 
-    if (resultsToDisplay) {
+    if (resultsToDisplay && this.state.categories.length !== 0) {
 
       return(
       <View style={styles.container}>
@@ -99,19 +132,19 @@ export default class Home extends Component<{}> {
         </View>
        </View>
      );
-   }
+   } else {
+     //if categories is empty show the connection message/ timeout after 5 seconds
     return (
          <View style={styles.welcomeContainer}>
            <View style={styles.welcome}>
-             <Text style={{fontSize: 30}}>Stardew Valley Wiki</Text>
+             <Text style={{fontSize: 16}}>Connecting to Stardew Valley Wiki...</Text>
+             { this.checkConnection() }
+             { this.renderRetry() }
           </View>
-          <View style={styles.welcomeImg}>
-               <Image
-                 source={require('../img/Abigail.gif')}
-               />
-             </View>
+
          </View>
        );
+     }
   }
 }
 

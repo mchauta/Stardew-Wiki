@@ -71,7 +71,7 @@ class SingleCat extends React.Component {
       setTimeout(() => {
         var tempArray = this.state.tocData.slice();
         tempArray.push(text);
-        this.setState({tocData: tempArray}, () => console.log(this.state.tocData, "after"));
+        this.setState({tocData: tempArray});
       }, 5);
     }
 
