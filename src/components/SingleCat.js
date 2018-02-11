@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, WebView, ScrollView, Image, TouchableOpacity, Dimensions, FlatList, LayoutAnimation } from "react-native";
+import { Linking, StyleSheet, Text, View, WebView, ScrollView, Image, TouchableOpacity, Dimensions, FlatList, LayoutAnimation } from "react-native";
 import PropTypes from 'prop-types';
 import { StackNavigator } from 'react-navigation';
 import ajax from '../ajax';
@@ -13,6 +13,8 @@ class SingleCat extends React.Component {
 
 
   state = {
+    hasError: false,
+    error:[],
     data: [],
     coords: [],
     tocData: [],
@@ -20,13 +22,20 @@ class SingleCat extends React.Component {
     showTOC: false,
   };
 
-
+  componentWillMount () {
+    this.setState({error: ''});
+    this.setState({hasError: false});
+  }
   async componentDidMount() {
      const { params } = this.props.navigation.state;
      let singlePageData = await ajax.fetchSinglePage (params.pageName);
+     if (singlePageData.message) {
+       this.setState({ error: singlePageData.message });
+       this.setState({ hasError: true });
+     } else {
      this.setState({ data: singlePageData });
      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-
+   }
   }
 
 
@@ -36,7 +45,17 @@ class SingleCat extends React.Component {
     title: navigation.state.params.pageName.replace("_", " "),
   })
 
+checkLink = (evt, href) => {
+  const { navigate } = this.props.navigation;
+    if (href.startsWith("/")) {
+      navigate("SingleCat", {pageName: decodeURI(href.replace("/",""))})
+    } else {
+    Linking.openURL(href).catch(err => console.error('An error occurred', err));
+  }
+}
 
+
+//sort the coordinates from lowest to highest
   sortCoords = (a, b) => {
     if (a[1] && b[1]) {
       if (a[1] < b[1]) return -1;
@@ -46,6 +65,7 @@ class SingleCat extends React.Component {
     }
   }
 
+//for building the coordinates array
   onLayout = (e) => {
 
         var arrayvar = this.state.coords.slice();
@@ -67,6 +87,7 @@ class SingleCat extends React.Component {
           });
     }
 
+//builds data for TOC by adding it on the the state array
     buildTOCData = (text) => {
       setTimeout(() => {
         var tempArray = this.state.tocData.slice();
@@ -165,7 +186,7 @@ class SingleCat extends React.Component {
 
 
     const { params } = this.props.navigation.state;
-    const { navigate } = this.props.navigation;
+
 
 
     let alterNode = (node) => {
@@ -185,9 +206,15 @@ class SingleCat extends React.Component {
         }
       }
     }
-
+    if (this.state.hasError) {
+      return (
+        <View style={styles.container}>
+          <Text> {this.state.error} </Text>
+          </View>
+      )
+    }
     //if there is a page to display, show it
-    if (this.state.data.parse) {
+    else if (this.state.data.parse) {
     return (
 
 
@@ -199,7 +226,7 @@ class SingleCat extends React.Component {
               <HTML
 
                 html={this.state.data.parse.text['*']}
-                onLinkPress={(evt, href) => navigate("SingleCat", {pageName: decodeURI(href.replace("/",""))})}
+                onLinkPress={(evt, href) => {this.checkLink(evt, href)}}
                 ignoredTags={['head', 'scripts', 'audio', 'video', 'track', 'embed', 'object', 'param', 'source', 'canvas', 'noscript',
                     'caption', 'col', 'colgroup', 'button', 'datalist', 'fieldset', 'form',
                     'input', 'label', 'legend', 'meter', 'optgroup', 'option', 'output', 'progress', 'select', 'textarea', 'details', 'diaglog',
@@ -275,9 +302,27 @@ class SingleCat extends React.Component {
 
 
                     },
+                    ul: {
+                      flexDirection: 'row',
+                      flex: 1,
+                      alignItems: 'center',
+                      //justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      minWidth: Dimensions.get('window').width - 20,
+
+                      //minWidth:75,
+                      //minHeight: 16,
+                    },
                     li: {
-                      minWidth:75,
-                      minHeight: 16,
+                      flex: 1,
+                      alignSelf: 'stretch',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'row',
+                      flexWrap:'nowrap',
+
+                      //minWidth:75,
+                      //minHeight: 16,
                     },
                     td : {
                       //minWidth: 200,

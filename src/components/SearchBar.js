@@ -26,7 +26,9 @@ handleChange = (searchTerm) => {
       <TextInput
         style= {styles.input}
         placeholder= "Search Stardew Valley Wiki"
-        onChangeText={this.handleChange}/>
+        onChangeText={this.handleChange}
+        clearButtonMode={'while-editing'}
+        autoCapitalize={'none'}/>
     );
   }
 }

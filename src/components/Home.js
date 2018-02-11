@@ -2,6 +2,7 @@
  * Sample React Native App
  * https://github.com/facebook/react-native
  * @flow
+ Todo: 1. deal with external links 2. deal with gifts page 3. ul dots
  */
 
 import React, { Component } from 'react';
@@ -55,6 +56,7 @@ export default class Home extends Component<{}> {
     }
   }
 
+//timeout and
   checkConnection = () => {
     setTimeout(()=> {
       this.setState({ timeout: true });
@@ -62,8 +64,6 @@ export default class Home extends Component<{}> {
   }
 
   searchWiki = async (searchTerm) => {
-
-
 
     let searchResults = [];
     if (searchTerm) {
@@ -84,13 +84,13 @@ export default class Home extends Component<{}> {
     title: "Stardew Valley Mobile Wiki",
   }
   async retryConnection() {
-    this.setState({ timeout: false });
+
      const catData = await ajax.fetchCategories ();
      //console.log(catData, 'catData');
      this.setState({ categories: catData.query.pages[4].links });
      LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
      //console.log(this.state.categories, 'categories');
-
+     this.setState({ timeout: false });
   }
 
   async componentDidMount() {
