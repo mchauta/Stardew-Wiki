@@ -1,6 +1,6 @@
 
-import React, { Component } from "react";
-import { TextInput, StyleSheet  } from "react-native";
+import React, { Component } from 'react';
+import { TextInput, StyleSheet  } from 'react-native';
 import PropTypes from 'prop-types';
 import debounce from 'lodash.debounce';
 
@@ -21,22 +21,22 @@ handleChange = (searchTerm) => {
     this.debouncedSearchWiki(this.state.searchTerm);
   });
 };
-  render() {
-    return(
-      <TextInput
-        style= {styles.input}
-        placeholder= "Search Stardew Valley Wiki"
-        onChangeText={this.handleChange}
-        clearButtonMode={'while-editing'}
-        autoCapitalize={'none'}/>
-    );
-  }
+
+render() {
+  return(
+    <TextInput
+      style= {styles.input}
+      placeholder= 'Search Stardew Valley Wiki'
+      onChangeText={this.handleChange}
+      clearButtonMode={'while-editing'}
+      autoCapitalize={'none'}/>
+  );
+}
 }
 
 const styles = StyleSheet.create({
   input: {
     height: 50,
-    margin: 5,
     backgroundColor: '#F5FCFF',
     borderRadius: 5,
     borderWidth: 1,
@@ -48,4 +48,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
 
   }
-})
+});

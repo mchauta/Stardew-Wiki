@@ -2,7 +2,6 @@
  * Sample React Native App
  * https://github.com/facebook/react-native
  * @flow
- Todo: 1. deal with external links 2. deal with gifts page 3. ul dots
  */
 
 import React, { Component } from 'react';
@@ -18,7 +17,6 @@ import {
 } from 'react-native';
 import ajax from '../ajax';
 import SearchBar from './SearchBar';
-import { StackNavigator } from 'react-navigation';
 
 
 export default class Home extends Component<{}> {
@@ -28,35 +26,36 @@ export default class Home extends Component<{}> {
     timeout: false,
   };
 
+  //remove any object with wordcount less than 10, this removes redirect pages.
  removeFromObject = (object) => {
-    i = object.length;
-    console.log(i, 'object length');
-    while (i--) {
-    if (object[i].wordcount < 10) {
-      //if wordcount is less than ten remove from the search results
-        object.splice(i, 1);
-      }
-    }
-        return object;
+   var i;
+   i = object.length;
+   while (i--) {
+     if (object[i].wordcount < 10) {
+       //if wordcount is less than ten remove from the search results
+       object.splice(i, 1);
+     }
+   }
+   return object;
 
-  }
+ }
 
-
-  renderRetry = () => {
-    if (this.state.timeout == true) {
-      return (
-        <View>
+//render retry button after timeout
+renderRetry = () => {
+  if (this.state.timeout == true) {
+    return (
+      <View>
         <Text style={{textAlign: 'center', padding: 10}}>Connection Failed</Text>
         <Button
-          onPress={ () => {this.retryConnection()} }
-          title="Retry">
+          onPress={ () => {this.retryConnection();} }
+          title='Retry'>
         </Button>
-        </View>
-      )
-    }
+      </View>
+    );
   }
+}
 
-//timeout and
+//timeout after 5 seconds
   checkConnection = () => {
     setTimeout(()=> {
       this.setState({ timeout: true });
@@ -65,86 +64,80 @@ export default class Home extends Component<{}> {
 
   searchWiki = async (searchTerm) => {
 
-    let searchResults = [];
     if (searchTerm) {
-     const searchData = await ajax.fetchSearchResults(searchTerm);
-     const searchDataParsed =  this.removeFromObject(searchData.query.search);
-     this.setState({ searchResults: searchDataParsed });
-     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-     console.log(this.state.searchResults);
+      const searchData = await ajax.fetchSearchResults(searchTerm);
+      const searchDataParsed =  this.removeFromObject(searchData.query.search);
+      this.setState({ searchResults: searchDataParsed });
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
     } else {
-     this.setState({searchResults: []});
-   }
+      this.setState({searchResults: []});
+    }
   }
 
 
 
 
   static navigationOptions = {
-    title: "Stardew Valley Mobile Wiki",
+    title: 'Stardew Valley Mobile Wiki',
   }
   async retryConnection() {
-
-     const catData = await ajax.fetchCategories ();
-     //console.log(catData, 'catData');
-     this.setState({ categories: catData.query.pages[4].links });
-     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-     //console.log(this.state.categories, 'categories');
-     this.setState({ timeout: false });
+    const catData = await ajax.fetchCategories ();
+    //console.log(catData, 'catData');
+    this.setState({ categories: catData.query.pages[4].links });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+    //console.log(this.state.categories, 'categories');
+    this.setState({ timeout: false });
   }
 
   async componentDidMount() {
-     const catData = await ajax.fetchCategories ();
-     //console.log(catData, 'catData');
-     this.setState({ categories: catData.query.pages[4].links });
+    const catData = await ajax.fetchCategories ();
+    //console.log(catData, 'catData');
+    this.setState({ categories: catData.query.pages[4].links });
     // console.log(this.state.categories, 'categories');
 
   }
   render() {
     const { navigate } = this.props.navigation;
     const resultsToDisplay = this.state.searchResults.length > 0
-     ? this.state.searchResults
-     : this.state.categories;
+      ? this.state.searchResults
+      : this.state.categories;
 
     if (resultsToDisplay && this.state.categories.length !== 0) {
 
       return(
-      <View style={styles.container}>
-        <View style={styles.head}>
-          <Image
-           style={styles.welcomeImg}
-            source={require('../img/Cat.gif')}
-          />
-          <SearchBar searchWiki={this.searchWiki}/>
-        </View>
-        <View style={styles.listContainer}>
-          <FlatList
-
-            data={resultsToDisplay}
-            renderItem={({item}) =>
-              <TouchableOpacity onPress={() => navigate("SingleCat", {pageName: item.title})}>
-                <Text style={styles.listItem}>{item.title}</Text>
-              </TouchableOpacity>
-            }
-
-            keyExtractor={item => item.title}
-          />
-        </View>
-       </View>
-     );
-   } else {
-     //if categories is empty show the connection message/ timeout after 5 seconds
-    return (
-         <View style={styles.welcomeContainer}>
-           <View style={styles.welcome}>
-             <Text style={{fontSize: 16}}>Connecting to Stardew Valley Wiki...</Text>
-             { this.checkConnection() }
-             { this.renderRetry() }
+        <View style={styles.container}>
+          <View style={styles.head}>
+            <Image
+              style={styles.welcomeImg}
+              source={require('../img/Cat.gif')}
+            />
+            <SearchBar searchWiki={this.searchWiki}/>
           </View>
-
-         </View>
-       );
-     }
+          <View style={styles.listContainer}>
+            <FlatList
+              data={resultsToDisplay}
+              renderItem={({item}) =>
+                <TouchableOpacity onPress={() => navigate('SingleCat', {pageName: item.title})}>
+                  <Text style={styles.listItem}>{item.title}</Text>
+                </TouchableOpacity>
+              }
+              keyExtractor={(item) => item.title}
+            />
+          </View>
+        </View>
+      );
+    } else {
+      //if categories is empty show the connection message/ timeout after 5 seconds
+      return (
+        <View style={styles.welcomeContainer}>
+          <View style={styles.welcome}>
+            <Text style={{fontSize: 16}}>Connecting to Stardew Valley Wiki...</Text>
+            { this.checkConnection() }
+            { this.renderRetry() }
+          </View>
+        </View>
+      );
+    }
   }
 }
 

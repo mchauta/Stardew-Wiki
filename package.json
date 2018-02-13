@@ -16,8 +16,11 @@
     "react-navigation": "^1.0.0-beta.27"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.1",
     "babel-jest": "22.1.0",
     "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.17.0",
+    "eslint-plugin-react": "^7.6.1",
     "jest": "22.1.4",
     "react-native-clean-project": "^1.0.6",
     "react-test-renderer": "16.2.0"

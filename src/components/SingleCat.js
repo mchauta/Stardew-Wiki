@@ -1,7 +1,5 @@
-import React, { Component } from "react";
-import { Linking, StyleSheet, Text, View, WebView, ScrollView, Image, TouchableOpacity, Dimensions, FlatList, LayoutAnimation } from "react-native";
-import PropTypes from 'prop-types';
-import { StackNavigator } from 'react-navigation';
+import React from 'react';
+import { Linking, StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, Dimensions, FlatList, LayoutAnimation } from 'react-native';
 import ajax from '../ajax';
 import HTML from 'react-native-render-html';
 import { Icon } from 'react-native-elements';
@@ -27,30 +25,30 @@ class SingleCat extends React.Component {
     this.setState({hasError: false});
   }
   async componentDidMount() {
-     const { params } = this.props.navigation.state;
-     let singlePageData = await ajax.fetchSinglePage (params.pageName);
-     if (singlePageData.message) {
-       this.setState({ error: singlePageData.message });
-       this.setState({ hasError: true });
-     } else {
-     this.setState({ data: singlePageData });
-     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-   }
+    const { params } = this.props.navigation.state;
+    const singlePageData = await ajax.fetchSinglePage (params.pageName);
+    if (singlePageData.message) {
+      this.setState({ error: singlePageData.message });
+      this.setState({ hasError: true });
+    } else {
+      this.setState({ data: singlePageData });
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+    }
   }
 
 
 
   static navigationOptions = ({ navigation }) => ({
 
-    title: navigation.state.params.pageName.replace("_", " "),
+    title: navigation.state.params.pageName.replace('_', ' '),
   })
 
 checkLink = (evt, href) => {
   const { navigate } = this.props.navigation;
-    if (href.startsWith("/")) {
-      navigate("SingleCat", {pageName: decodeURI(href.replace("/",""))})
-    } else {
-    Linking.openURL(href).catch(err => console.error('An error occurred', err));
+  if (href.startsWith('/')) {
+    navigate('SingleCat', {pageName: decodeURI(href.replace('/',''))});
+  } else {
+    Linking.openURL(href).catch((err) => console.error('An error occurred', err));
   }
 }
 
@@ -61,325 +59,294 @@ checkLink = (evt, href) => {
       if (a[1] < b[1]) return -1;
       if (a[1] > b[1]) return 1;
       return 0;
-
     }
   }
 
-//for building the coordinates array
+  //for building the coordinates array
   onLayout = (e) => {
 
-        var arrayvar = this.state.coords.slice();
-        arrayvar.push([e.nativeEvent.layout.x,  e.nativeEvent.layout.y])
+    var arrayvar = this.state.coords.slice();
+    arrayvar.push([e.nativeEvent.layout.x,  e.nativeEvent.layout.y]);
 
-        this.setState({ coords: arrayvar }, () => {
-              var r = [];
-              var keys = this.state.tocData;
-              var values = this.state.coords;
-              values = values.sort(this.sortCoords);
-              for (i = 0; i < keys.length; i++) {
+    this.setState({ coords: arrayvar }, () => {
+      var r = [];
+      var i;
+      var keys = this.state.tocData;
+      var values = this.state.coords;
+      values = values.sort(this.sortCoords);
+      for (i = 0; i < keys.length; i++) {
 
-                  r[i] = [keys[i], values[i]];
-                }
-              //place a back to top button at beginning of array
-              r.unshift(["Back to the top", [0, 0]]);
+        r[i] = [keys[i], values[i]];
+      }
+      //place a back to top button at beginning of array
+      r.unshift(['Back to the top', [0, 0]]);
 
-              this.setState({toc: r});
-          });
-    }
+      this.setState({toc: r});
+    });
+  }
 
 //builds data for TOC by adding it on the the state array
-    buildTOCData = (text) => {
-      setTimeout(() => {
-        var tempArray = this.state.tocData.slice();
-        tempArray.push(text);
-        this.setState({tocData: tempArray});
-      }, 5);
-    }
+buildTOCData = (text) => {
+  setTimeout(() => {
+    var tempArray = this.state.tocData.slice();
+    tempArray.push(text);
+    this.setState({tocData: tempArray});
+  }, 5);
+}
 
-    //toggle the arrow for Table of Contents
-            toggleArrow = () => {
-              if (this.state.showTOC) {
-                return(
-                  <Icon
-                   name='keyboard-arrow-up'
-                   color='white' />
-                );
-              }
-              return(
-                <Icon
-                 name='keyboard-arrow-down'
-                 color='white' />);
-            }
+//toggle the arrow for Table of Contents
+toggleArrow = () => {
+  if (this.state.showTOC) {
+    return(
+      <Icon
+        name='keyboard-arrow-up'
+        color='white' />
+    );
+  }
+  return(
+    <Icon
+      name='keyboard-arrow-down'
+      color='white' />);
+}
 
-    //toggle the height of the Table of Contents
-            toggleHeight = () => {
-              if (this.state.showTOC) {
-                return({height: '30%',});
-              }
-              return({height: 0,});
-            }
-
-//toggle the Table of Contents
-        toggleTOC = () => {
-          this.setState({showTOC: !this.state.showTOC});
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-        }
+//toggle the height of the Table of Contents
+toggleHeight = () => {
+  if (this.state.showTOC) {
+    return({height: '30%',});
+  }
+  return({height: 0,});
+}
 
 //toggle the Table of Contents
-        renderTOCList = (item, index) => {
-          if (index === 0) {
-            return (
-              <Text style={styles.listItemTop}>{item[0]}</Text>
-            );
-          }
-            return (
-              <Text style={styles.listItem}>{index}. {item[0]}</Text>
-            );
-          }
+toggleTOC = () => {
+  this.setState({showTOC: !this.state.showTOC});
+  LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+}
+
+//toggle the Table of Contents
+renderTOCList = (item, index) => {
+  if (index === 0) {
+    return (
+      <Text style={styles.listItemTop}>{item[0]}</Text>
+    );
+  }
+  return (
+    <Text style={styles.listItem}>{index}. {item[0]}</Text>
+  );
+}
 
 
 
 
 //render the Table of Contents
-    renderTOC = () => {
+renderTOC = () => {
+  if (this.state.toc.length > 0) {
 
-       if (this.state.toc.length > 0) {
+    return (
+      <View style={styles.head}>
+        <FlatList
+          style={this.toggleHeight()}
+          data={this.state.toc}
+          keyExtractor={(item, index) => index}
+          renderItem={({item, index}) =>
+            <TouchableOpacity onPress={() => this._scrollView.scrollTo({x: item[1][0], y: item[1][1]})}>
+              { this.renderTOCList(item, index) }
+            </TouchableOpacity>
+          }
+        />
 
-         return (
-           <View style={styles.head}>
-               <FlatList
-                ref="_toc"
-                style={this.toggleHeight()}
-                data={this.state.toc}
-                keyExtractor={(item, index) => index}
-                renderItem={({item, index}) =>
-                <TouchableOpacity onPress={() => this.refs._scrollView.scrollTo({x: item[1][0], y: item[1][1]})}>
-                  { this.renderTOCList(item, index) }
-                </TouchableOpacity>
-                }
-                />
+        <TouchableOpacity
+          style={styles.tocContainer}
+          onPress={this.toggleTOC}>
+          <Text style={styles.tocButton}> Table of Contents </Text>
+          { this.toggleArrow() }
+        </TouchableOpacity>
+      </View>
 
-                <TouchableOpacity
-                style={styles.tocContainer}
-                 onPress={this.toggleTOC}>
-                   <Text style={styles.tocButton}> Table of Contents </Text>
-                   { this.toggleArrow() }
-                 </TouchableOpacity>
-             </View>
+    );
+  }
+  return (
+    <View
+      style={styles.tocContainer}>
+      <Text style={styles.tocButton}>Table of Contents Loading...</Text>
+    </View>
+  );
 
-         );
-       }
-       return (
-         <View
-          style={styles.tocContainer}>
-
-          <Text style={styles.tocButton}>Table of Contents Loading...</Text>
-
-        </View>
-       );
-
-     }
+}
 
 
 
-  render() {
+render() {
 
+  const alterNode = (node) => {
+    const { name } = node;
 
-    const { params } = this.props.navigation.state;
-
-
-
-    let alterNode = (node) => {
-      const { children, name } = node;
-
-      //prepending uri for images
-      if (name === 'img') {
-        //console.log(node.attribs.src);
-        node.attribs.src = 'https://stardewvalleywiki.com/' + node.attribs.src;
+    //prepending uri for images
+    if (name === 'img') {
+      //console.log(node.attribs.src);
+      node.attribs.src = 'https://stardewvalleywiki.com/' + node.attribs.src;
+      return node;
+    }
+    //removing all inline styles
+    if (node.attribs) {
+      if (node.attribs.style) {
+        node.attribs.style = '';
         return node;
       }
-      //removing all inline styles
-      if (node.attribs) {
-        if (node.attribs.style) {
-          node.attribs.style = '';
-          return node;
-        }
-      }
     }
-    if (this.state.hasError) {
-      return (
-        <View style={styles.container}>
-          <Text> {this.state.error} </Text>
-          </View>
-      )
-    }
-    //if there is a page to display, show it
-    else if (this.state.data.parse) {
+  };
+  if (this.state.hasError) {
+    return (
+      <View style={styles.container}>
+        <Text> {this.state.error} </Text>
+      </View>
+    );
+  }
+  //if there is a page to display, show it
+  else if (this.state.data.parse) {
     return (
 
 
       <View style={styles.container}>
+        { this.renderTOC() }
 
-          { this.renderTOC() }
+        <ScrollView
+          ref={(c) => this._scrollView = c}
+          style={styles.web}>
+          <HTML
+            html={this.state.data.parse.text['*']}
+            onLinkPress={(evt, href) => {this.checkLink(evt, href);}}
+            ignoredTags={['head', 'scripts', 'audio', 'video', 'track', 'embed', 'object', 'param', 'source', 'canvas', 'noscript',
+              'caption', 'col', 'colgroup', 'button', 'datalist', 'fieldset', 'form', 'input', 'label', 'legend', 'meter', 'optgroup', 'option', 'output', 'progress', 'select', 'textarea', 'details', 'diaglog',
+              'menu', 'menuitem', 'summary']}
+            alterNode = {alterNode}
+            listsPrefixesRenderers = {{
+              ul: () => {
+                return (null);
+              }
+            }}
+            renderers={{
 
-          <ScrollView ref='_scrollView' style={styles.web}>
-              <HTML
+              h2: (htmlAttribs, children, styles, passProps) => {
+                this.buildTOCData(passProps.rawChildren[0].children[0].data);
+                return(
+                  <Text
+                    onLayout={this.onLayout}
+                    key={passProps.key}
+                    style={[styles, { marginTop: 20, fontWeight: 'bold',}]}>{ children } </Text>
+                );
+              },
 
-                html={this.state.data.parse.text['*']}
-                onLinkPress={(evt, href) => {this.checkLink(evt, href)}}
-                ignoredTags={['head', 'scripts', 'audio', 'video', 'track', 'embed', 'object', 'param', 'source', 'canvas', 'noscript',
-                    'caption', 'col', 'colgroup', 'button', 'datalist', 'fieldset', 'form',
-                    'input', 'label', 'legend', 'meter', 'optgroup', 'option', 'output', 'progress', 'select', 'textarea', 'details', 'diaglog',
-                    'menu', 'menuitem', 'summary']}
-                alterNode = {alterNode}
-                renderers={{
+              table: (htmlAttribs, children, styles, passProps) => {
+                //if has id render as view instead of scrollview
+                if (htmlAttribs && htmlAttribs.id =='infoboxtable') {
+                  return (
+                    <View
+                      style={styles}
+                      key={passProps.key}>
+                      { children }
+                    </View>
+                  );
+                }
 
-                      h2: (htmlAttribs, children, styles, passProps) => {
-                        this.buildTOCData(passProps.rawChildren[0].children[0].data);
-                        return(
-                          <Text
-                            onLayout={
-                                        this.onLayout
-                                      }
-                            key={passProps.key}
-                            style={[styles, { marginTop: 20, fontWeight: 'bold',}]}>{ children } </Text>
-                          );
-                        },
+                return (
+                  <ScrollView
+                    horizontal={true}
+                    directionalLockEnabled={false}
+                    key={passProps.key}>
+                    <View
+                      style={styles}>
+                      { children }
+                    </View>
+                  </ScrollView>
 
-                          table: (htmlAttribs, children, styles, passProps) => {
-                            //if has id render as view instead of scrollview
-                            if (htmlAttribs && htmlAttribs.id =='infoboxtable') {
-                              return (
-                                <View
-                                  style={styles}
-                                  key={passProps.key}>
-                                  { children }
-                                </View>
-                              );
-                              }
+                );
+              }
+            }}
+            tagsStyles={{
 
-                            return (
-                              <ScrollView
-                                horizontal={true}
-                                directionalLockEnabled={false}
-                                key={passProps.key}
-                                >
-                                <View
-                                  style={styles}>
-                                    { children }
-                                </View>
-                                </ScrollView>
+              h3: {
+                fontSize: 40,
+              },
 
-                            );
-                          }
-                }}
-                tagsStyles={{
+              tr: {
+                flexDirection: 'row',
+                flex: 1,
+                alignItems: 'center',
+                //justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                //minWidth: Dimensions.get('window').width - 20,
+              },
 
-                  h3: {
-                    fontSize: 40,
-                  },
+              th : {
+                flex: 1,
+                alignSelf: 'stretch',
+                backgroundColor: '#44DB5E',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRightWidth: 1,
+                borderColor: 'white',
+                padding: 10,
+                //minWidth: 200,
+                maxWidth: Dimensions.get('window').width,
 
-                    tr: {
-                      flexDirection: 'row',
-                      flex: 1,
-                      alignItems: 'center',
-                      //justifyContent: 'space-between',
-                      flexWrap: 'wrap',
-                      minWidth: Dimensions.get('window').width - 20,
-                    },
+              },
+              ul: {
+                flexDirection: 'row',
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
 
-                    th : {
-                      flex: 1,
-                      alignSelf: 'stretch',
-                      backgroundColor: '#44DB5E',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRightWidth: 1,
-                      borderColor: 'white',
-                      padding: 10,
-                      //minWidth: 200,
-                      maxWidth: Dimensions.get('window').width,
-
-
-                    },
-                    ul: {
-                      flexDirection: 'row',
-                      flex: 1,
-                      alignItems: 'center',
-                      //justifyContent: 'space-between',
-                      flexWrap: 'wrap',
-                      minWidth: Dimensions.get('window').width - 20,
-
-                      //minWidth:75,
-                      //minHeight: 16,
-                    },
-                    li: {
-                      flex: 1,
-                      alignSelf: 'stretch',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexDirection: 'row',
-                      flexWrap:'nowrap',
-
-                      //minWidth:75,
-                      //minHeight: 16,
-                    },
-                    td : {
-                      //minWidth: 200,
-                      flex: 1,
-                      alignSelf: 'stretch',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexDirection: 'row',
-                      flexWrap:'wrap',
-                      overflow: 'hidden',
-                      padding: 10,
-                      backgroundColor: '#F5FCFF',
-                      borderWidth: 1,
-                      borderColor: 'white',
-                      maxWidth: Dimensions.get('window').width,
-
-
-                    },
-
-                    table: {
-
-
-                    },
-
-                    img: {
-                      flex: 1,
-                      maxWidth: '100%',
-
-
-                    },
-                  }}
-
-
-
-              />
-          </ScrollView>
-          </View>
-        );
-       }
-       //if no page to display, show loading screen
-       return (
-         <View style={styles.container}>
-           <Image
-            style={styles.loadImg}
-             source={require('../img/Dog.gif')}
-           />
-          <Text style={styles.loading}>Loading...</Text>
-         </View>
-       );
-     }
+              },
+              li: {
+                flex: 1,
+                alignSelf: 'stretch',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                flexWrap:'nowrap',
+              },
+              td : {
+                flex: 1,
+                alignSelf: 'stretch',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexWrap:'wrap',
+                overflow: 'hidden',
+                padding: 10,
+                backgroundColor: '#F5FCFF',
+                borderWidth: 1,
+                borderColor: 'white',
+                maxWidth: Dimensions.get('window').width,
+              },
+              img: {
+                flex: 1,
+                maxWidth: '100%',
+              },
+            }}
+          />
+        </ScrollView>
+      </View>
+    );
   }
+  //if no page to display, show loading screen
+  return (
+    <View style={styles.container}>
+      <Image
+        style={styles.loadImg}
+        source={require('../img/Dog.gif')}
+      />
+      <Text style={styles.loading}>Loading...</Text>
+    </View>
+  );
+}
+}
 
 
 
 const styles = StyleSheet.create({
   head: {
-    //flex: 1,
     width: '100%',
   },
   toc: {
@@ -402,8 +369,6 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '100%',
     backgroundColor: '#0076FF',
-
-
   },
   container: {
     backgroundColor: 'white',
@@ -416,7 +381,7 @@ const styles = StyleSheet.create({
 
   loading: {
     fontSize: 20,
-    textAlign: "center",
+    textAlign: 'center',
     margin: 10,
     color: 'grey'
   },
