@@ -155,14 +155,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     padding: 15,
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 2,
-      height: -3
-    },
-    shadowRadius: 5,
-    shadowOpacity: .5
-
   },
   container: {
     flex: 1,
@@ -196,6 +188,7 @@ const styles = StyleSheet.create({
 
   },
   welcomeImg: {
+    maxWidth: 64,
     justifyContent: 'flex-start',
     flex: 1,
   }

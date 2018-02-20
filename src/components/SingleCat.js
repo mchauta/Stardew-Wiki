@@ -273,7 +273,7 @@ render() {
                 flexDirection: 'row',
                 flex: 1,
                 alignItems: 'center',
-                //justifyContent: 'space-between',
+                //justifyContent: 'center',
                 flexWrap: 'wrap',
                 //minWidth: Dimensions.get('window').width - 20,
               },
@@ -297,6 +297,7 @@ render() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 flexWrap: 'wrap',
+                //minWidth: Dimensions.get('window').width - 20,
 
               },
               li: {
