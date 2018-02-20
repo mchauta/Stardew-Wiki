@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
   },
   welcomeImg: {
     maxWidth: 64,
+    maxHeight: 64,
     justifyContent: 'flex-start',
     flex: 1,
   }
