@@ -16,7 +16,7 @@ class SingleCat extends React.Component {
     data: [],
     coords: [],
     tocData: [],
-    toc:[],
+    toc:[['Back to the top', [0, 0]]],
     showTOC: false,
   };
 
@@ -140,38 +140,28 @@ renderTOCList = (item, index) => {
 
 //render the Table of Contents
 renderTOC = () => {
-  if (this.state.toc.length > 0) {
-
-    return (
-      <View style={styles.head}>
-        <FlatList
-          style={this.toggleHeight()}
-          data={this.state.toc}
-          keyExtractor={(item, index) => index}
-          renderItem={({item, index}) =>
-            <TouchableOpacity onPress={() => this._scrollView.scrollTo({x: item[1][0], y: item[1][1]})}>
-              { this.renderTOCList(item, index) }
-            </TouchableOpacity>
-          }
-        />
-
-        <TouchableOpacity
-          style={styles.tocContainer}
-          onPress={this.toggleTOC}>
-          <Text style={styles.tocButton}> Table of Contents </Text>
-          { this.toggleArrow() }
-        </TouchableOpacity>
-      </View>
-
-    );
-  }
   return (
-    <View
-      style={styles.tocContainer}>
-      <Text style={styles.tocButton}>Table of Contents Loading...</Text>
-    </View>
-  );
+    <View style={styles.head}>
+      <FlatList
+        style={this.toggleHeight()}
+        data={this.state.toc}
+        keyExtractor={(item, index) => index}
+        renderItem={({item, index}) =>
+          <TouchableOpacity onPress={() => this._scrollView.scrollTo({x: item[1][0], y: item[1][1]})}>
+            { this.renderTOCList(item, index) }
+          </TouchableOpacity>
+        }
+      />
 
+      <TouchableOpacity
+        style={styles.tocContainer}
+        onPress={this.toggleTOC}>
+        <Text style={styles.tocButton}> Table of Contents </Text>
+        { this.toggleArrow() }
+      </TouchableOpacity>
+    </View>
+
+  );
 }
 
 
