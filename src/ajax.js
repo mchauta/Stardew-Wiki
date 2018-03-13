@@ -4,8 +4,8 @@ export default {
   async fetchCategories () {
     try {
 
-      let response = await fetch(apiHost + 'action=query&prop=links&titles=Stardew%20Valley%20Wiki&pllimit=500&plnamespace=0&format=json');
-      let responseJson = await response.json();
+      const response = await fetch(apiHost + 'action=query&prop=links&titles=Stardew%20Valley%20Wiki&pllimit=500&plnamespace=0&format=json');
+      const responseJson = await response.json();
       return responseJson;
     } catch (error) {
       console.error(error);
@@ -15,8 +15,8 @@ export default {
   async fetchSinglePage (pageName) {
     try {
 
-      let response = await fetch(apiHost + 'action=parse&format=json&disabletoc=true&prop=headhtml|wikitext|text&disableeditsection=true&page=' + pageName);
-      let responseJson = await response.json();
+      const response = await fetch(apiHost + 'action=parse&format=json&disabletoc=true&prop=headhtml|wikitext|text&disableeditsection=true&page=' + pageName);
+      const responseJson = await response.json();
       return responseJson;
     } catch (error) {
       console.error(error);
@@ -27,8 +27,8 @@ export default {
   async fetchSearchResults(searchTerm) {
     try {
 
-      let response = await fetch(apiHost + 'action=query&list=search&srwhat=title&srprop=redirecttitle|wordcount&format=json&srsearch=' + searchTerm);
-      let responseJson = await response.json();
+      const response = await fetch(apiHost + 'action=opensearch&redirects=resolve&format=json&search=' + searchTerm);
+      const responseJson = await response.json();
       return responseJson;
     } catch (error) {
       console.error(error);
@@ -37,9 +37,9 @@ export default {
 
   async fetchSinglePageFormat (pageName) {
     try {
-      let response = await fetch(apiHost + 'action=parse&format=json&disabletoc=true&disableeditsection=true&page=' + pageName);
-      let responseJson = await response.json();
-      let formatData = '<body>' + responseJson.parse.text['*'] + '</body>';
+      const response = await fetch(apiHost + 'action=parse&format=json&disabletoc=true&disableeditsection=true&page=' + pageName);
+      const responseJson = await response.json();
+      const formatData = '<body>' + responseJson.parse.text['*'] + '</body>';
       //console.log(formatData);
       return formatData;
     } catch (error) {

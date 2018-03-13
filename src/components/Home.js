@@ -13,7 +13,8 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  LayoutAnimation
+  LayoutAnimation,
+  ActivityIndicator,
 } from 'react-native';
 import ajax from '../ajax';
 import SearchBar from './SearchBar';
@@ -66,8 +67,9 @@ renderRetry = () => {
 
     if (searchTerm) {
       const searchData = await ajax.fetchSearchResults(searchTerm);
-      const searchDataParsed =  this.removeFromObject(searchData.query.search);
-      this.setState({ searchResults: searchDataParsed });
+      console.log(searchData);
+      //const searchDataParsed =  this.removeFromObject(searchData.query.search);
+      this.setState({ searchResults: searchData[1] });
       LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
     } else {
       this.setState({searchResults: []});
@@ -102,7 +104,7 @@ renderRetry = () => {
       ? this.state.searchResults
       : this.state.categories;
 
-    if (resultsToDisplay && this.state.categories.length !== 0) {
+    if (this.state.categories == resultsToDisplay) {
 
       return(
         <View style={styles.container}>
@@ -126,11 +128,36 @@ renderRetry = () => {
           </View>
         </View>
       );
+    } else if ( this.state.searchResults == resultsToDisplay ) {
+      return(
+        <View style={styles.container}>
+          <View style={styles.head}>
+            <Image
+              style={styles.welcomeImg}
+              source={require('../img/Dog.gif')}
+            />
+            <SearchBar searchWiki={this.searchWiki}/>
+          </View>
+          <View style={styles.listContainer}>
+            <FlatList
+              data={resultsToDisplay}
+              renderItem={({item}) =>
+                <TouchableOpacity onPress={() => navigate('SingleCat', {pageName: item})}>
+                  <Text style={styles.listItem}>{item}</Text>
+                </TouchableOpacity>
+              }
+              keyExtractor={(item) => item}
+            />
+          </View>
+        </View>
+      );
+
     } else {
       //if categories is empty show the connection message/ timeout after 5 seconds
       return (
         <View style={styles.welcomeContainer}>
           <View style={styles.welcome}>
+            <ActivityIndicator size="large" color= '#0076FF' />
             <Text style={{fontSize: 16}}>Connecting to Stardew Valley Wiki...</Text>
             { this.checkConnection() }
             { this.renderRetry() }
